@@ -413,6 +413,9 @@ const getGamePlay = async (req, res) => {
           let scoreObject = {};
           let navigateObjects = {};
           let navigateshowObjects = {};
+          let optionsVoicesObject = {};
+          let responseVoicesObject = {};
+          let feedbackVoicesObject = {};
 
           // Assuming blockSecondaryId is the property you want to use as the key
           let key = result.blockChoosen + result.blockSecondaryId;

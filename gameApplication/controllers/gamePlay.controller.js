@@ -497,7 +497,7 @@ const getGamePlay = async (req, res) => {
                         // console.log('qpOptID222:',  rows.qpOptionId);
 
                         optionsObject[rows.qpOptions] = translationId === '1' ? rows.qpOptionText : qpOptionText;
-                        
+                        optionsVoicesObject[rows.qpOptions] = translationId === '1' ? `${req.protocol}://${req.get('host')}${rows.qbAudioUrl}` : qbAudioUrl;
                         // optionsObject[rows.qpOptions] = translationId !== 1 ? rows.qpOptionText : qpOptionText ;
                         // optionsObject[rows.qpOptions] = translationId !== 1 ? qpOptionText : rows.qpOptionText ?? '';
 
@@ -508,6 +508,8 @@ const getGamePlay = async (req, res) => {
 
                     } else {
                       optionsObject[rows.qpOptions] = '';
+                      optionsVoicesObject[rows.qpOptions] = ''
+
 
                     }
 
@@ -517,23 +519,29 @@ const getGamePlay = async (req, res) => {
                        getOtherLanguage(id, translationId, rows.qpOptionId, 'qpFeedback')
                        .then(qpFeedback => {
                         feedbackObject[rows.qpOptions] = translationId === '1' ? rows.qpFeedback : qpFeedback;
-                        // feedbackObject[rows.qpOptions] = translationId !== 1 ? qpFeedback : rows.qpFeedback ?? '';
+                        feedbackVoicesObject[rows.qpOptions] = translationId === '1' ? `${req.protocol}://${req.get('host')}${rows.qbfeedbackAudioUrl}` : qbfeedbackAudioUrl;
+                         // feedbackObject[rows.qpOptions] = translationId !== 1 ? qpFeedback : rows.qpFeedback ?? '';
                         // Add any additional processing here
                     })
 
                     } else {
                       feedbackObject[rows.qpOptions] = '';
+                      feedbackVoicesObject[rows.qpOptions] = ''
+
                     }
 
                     if (rows.qpResponse) {
                       getOtherLanguage(id, translationId, rows.qpOptionId, 'qpResponse')
                           .then(response => {
                               responseObject[rows.qpOptions] = translationId === '1' ? rows.qpResponse  : response;
-                              // responseObject[rows.qpOptions] = translationId !== 1 ? response : rows.qpResponse ?? '';
+                              responseVoicesObject[rows.qpOptions] = translationId === '1' ? `${req.protocol}://${req.get('host')}${rows.qbResponseAudioUrl}` : qbResponseAudioUrl;  
+                            // responseObject[rows.qpOptions] = translationId !== 1 ? response : rows.qpResponse ?? '';
                               // Add any additional processing here
                           })
                   } else {
                       responseObject[rows.qpOptions] = '';
+                      responseVoicesObject[rows.qpOptions] = ''
+
                   }
                   
 
@@ -569,6 +577,8 @@ const getGamePlay = async (req, res) => {
               await Promise.all(promises);
               console.log('All promises resolved');
 
+              let voiceWithIntUrl = `${req.protocol}://${req.get('host')}${result.blockAudioUrl}`
+
               let value = {
                 QuestionsEmotion: result.blockCharacterposesId,
                 QuestionsVoice: result.blockVoiceEmotions,
@@ -586,6 +596,10 @@ const getGamePlay = async (req, res) => {
                 responseObject: responseObject,
                 responseemotionObject: responseemotionObject,
                 scoreObject: scoreObject,
+                voice: voiceWithIntUrl,
+                optionsVoices: optionsVoicesObject,
+                responseVoices: responseVoicesObject,
+                feedbackVoices: feedbackVoicesObject,
                 responseRoll: result.blockResponseRoll,
                 SkillTag: result.blockSkillTag,
                 status: 'yes',
